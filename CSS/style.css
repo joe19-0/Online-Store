@@ -295,7 +295,7 @@ header .bottom-header .nav-links li.active a {
 }
 .banners-4 .container .box {
     width: 24%;
-    background: url(/images/bg_banner3.jpg);
+    background: url(../images/bg_banner3.jpg);
     background-size: cover;
     background-position: center;
     border-radius: 5px;
