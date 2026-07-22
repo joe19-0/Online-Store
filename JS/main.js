@@ -1,3 +1,4 @@
+
 let categoryNavList = document.querySelector(".category-nav-list")
 let categoryBtn = document.querySelector(".category-btn")
 
@@ -70,17 +71,40 @@ function updateCart() {
     let cartItemsContainer = document.getElementById("cart-items")
     let cart = JSON.parse(localStorage.getItem("cart")) || []
 
+    let checkoutItems = document.getElementById("checkout-items")
+
     var totalPrc = 0
     var totalCount = 0
     
+    let itemsInput = document.getElementById("items")
+    let totalPriceInput = document.getElementById("total-price")
+    let countItemsInput = document.getElementById("count-items")
+
+    
     
     cartItemsContainer.innerHTML = ""
+
+    if (checkoutItems) {
+        checkoutItems.innerHTML = ""
+        
+
+        itemsInput.value = ""
+        totalPriceInput.value = ""
+        countItemsInput.value = ""
+    }
     
     cart.forEach(function (item, index) {
         let totalPrice = item.price * item.quantity
         
         totalPrc += totalPrice
         totalCount += item.quantity
+
+        if (itemsInput) {
+            itemsInput.value += item.name + " | " + "Price: " + totalPrice + " | " + "Count: " + item.quantity + ".\n"
+            countItemsInput.value = totalCount
+            totalPriceInput.value = totalPrc + 20
+        }
+        
 
         cartItemsContainer.innerHTML += `
             <div class="item-cart">
@@ -97,6 +121,28 @@ function updateCart() {
                 <button class="delete-item" data-index="${index}"><i class="fa-solid fa-trash-can"></i></button>
             </div>
         `
+
+        if (checkoutItems) {
+
+            checkoutItems.innerHTML += `
+                <div class="item-cart">
+                    <div class="image-name">
+                        <img src="${item.img}" alt="">
+                        <div class="content">
+                            <h4>${item.name}</h4>
+                            <p class="price-cart">$${totalPrice}</p>
+                            <div class="quantity-control">
+                                <button type="button" class="dec-quantity" data-index="${index}">-</button>
+                                <span class="quantity">${item.quantity}</span>
+                                <button type="button" class="inc-quantity" data-index="${index}">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="delete-item del-item" data-index="${index}"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+            `
+        }
     })
 
     let priceCartTotal = document.querySelector(".price-cart-total")
@@ -107,6 +153,14 @@ function updateCart() {
     countItemCart.textContent = totalCount
     countItemHeader.textContent = totalCount
 
+    if (checkoutItems) {
+        let subtotalCheckout = document.querySelector(".subtotal-checkout")
+        let shipping = 20
+        let totalCheckout = document.querySelector(".total-checkout")
+
+        subtotalCheckout.textContent = `$${totalPrc}`
+        totalCheckout.textContent = `$${totalPrc + shipping}`
+    }
 
     let incBtns = document.querySelectorAll(".inc-quantity")
     let decBtns = document.querySelectorAll(".dec-quantity")
@@ -135,8 +189,6 @@ function updateCart() {
             removeFromCart(itemIndex)
         }
     })
-
-
 
 }
 
